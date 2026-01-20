@@ -5,80 +5,132 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Copa Cars Accesorios | Catálogo</title>
     <link rel="icon" href="logo.jpg" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* --- CONFIGURACIÓN DE COLORES (ESTILO VISUAL) --- */
+        /* --- CONFIGURACIÓN DE COLORES --- */
         :root {
-            --color-primario: #FF8C00; /* Naranja de tu logo */
-            --color-secundario: #000000; /* Negro */
-            --color-fondo: #f4f4f4; /* Gris muy claro (limpio) */
-            --color-tarjeta: #ffffff;
-            --color-texto: #333333;
+            --primary: #FF8C00; /* Naranja Copa Cars */
+            --dark: #1a1a1a;
+            --gray: #666666;
+            --light: #f8f9fa;
+            --white: #ffffff;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
 
-        /* --- ESTILOS GENERALES (CSS) --- */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: var(--color-fondo); color: var(--color-texto); }
+        /* --- ESTILOS GENERALES --- */
+        body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; background-color: var(--light); color: var(--dark); }
         a { text-decoration: none; color: inherit; }
-        ul { list-style: none; padding: 0; }
+        * { box-sizing: border-box; }
 
         /* HEADER */
-        header { background-color: var(--color-secundario); color: white; padding: 1rem; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        header { background-color: var(--white); padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.5rem; font-weight: bold; color: var(--color-primario); display: flex; align-items: center; gap: 10px; }
-        .logo img { height: 50px; border-radius: 5px; background: white; padding: 2px; }
-        .cart-icon { position: relative; cursor: pointer; font-size: 1.2rem; background: var(--color-primario); padding: 8px 15px; border-radius: 20px; color: white; }
-        .cart-count { background: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.8rem; position: absolute; top: -5px; right: -5px; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--dark); display: flex; align-items: center; gap: 10px; }
+        .logo span { color: var(--primary); }
+        .logo img { height: 40px; }
+        
+        .cart-icon { position: relative; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; font-weight: 600; }
+        .cart-count { background: var(--primary); color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; justify-content: center; align-items: center; font-size: 0.75rem; }
 
-        /* CARRUSEL DE IMÁGENES */
-        .carousel { position: relative; max-width: 100%; height: 300px; overflow: hidden; background: #ddd; }
+        /* HERO / CARRUSEL */
+        .carousel { position: relative; width: 100%; height: 350px; overflow: hidden; background: #eee; }
         .carousel-track { display: flex; transition: transform 0.5s ease-in-out; height: 100%; }
-        .carousel-slide { min-width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background-size: cover; background-position: center; }
-        .carousel-slide h2 { background: rgba(0,0,0,0.6); color: white; padding: 10px 20px; border-radius: 5px; }
+        .carousel-slide { min-width: 100%; height: 100%; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; }
+        .carousel-text { background: rgba(0,0,0,0.5); color: white; padding: 20px 40px; border-radius: 8px; text-align: center; backdrop-filter: blur(5px); }
+        .carousel-text h2 { margin: 0; font-size: 2rem; }
 
-        /* FILTROS / CATEGORÍAS */
-        .filters { max-width: 1200px; margin: 20px auto; padding: 0 10px; display: flex; gap: 10px; overflow-x: auto; white-space: nowrap; padding-bottom: 10px; }
-        .filter-btn { background: white; border: 1px solid #ddd; padding: 10px 20px; border-radius: 20px; cursor: pointer; transition: 0.3s; }
-        .filter-btn:hover, .filter-btn.active { background: var(--color-primario); color: white; border-color: var(--color-primario); }
+        /* CONTENEDOR PRINCIPAL */
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
 
-        /* GRID DE PRODUCTOS */
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        /* FILTROS */
+        .filters { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 20px; margin-bottom: 20px; scrollbar-width: none; }
+        .filter-btn { background: var(--white); border: 1px solid #ddd; padding: 8px 20px; border-radius: 30px; cursor: pointer; transition: 0.3s; font-weight: 500; white-space: nowrap; }
+        .filter-btn:hover, .filter-btn.active { background: var(--dark); color: white; border-color: var(--dark); }
+
+        /* GRID PRODUCTOS (Inspirado en QuickCart) */
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px; }
         
-        /* TARJETA DE PRODUCTO */
-        .product-card { background: var(--color-tarjeta); border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: transform 0.2s; display: flex; flex-direction: column; }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .product-image { width: 100%; height: 200px; object-fit: cover; background: #eee; }
-        .product-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
-        .product-cat { font-size: 0.8rem; color: #888; text-transform: uppercase; margin-bottom: 5px; }
-        .product-title { font-size: 1.1rem; margin: 0 0 10px 0; font-weight: bold; }
-        .product-brand { font-size: 0.9rem; color: var(--color-primario); font-weight: bold; margin-bottom: 5px;}
-        .product-price { font-size: 1.3rem; color: var(--color-secundario); font-weight: bold; margin-bottom: 10px; }
-        .stock-tag { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-bottom: 10px; }
-        .in-stock { background: #d4edda; color: #155724; }
-        .out-stock { background: #f8d7da; color: #721c24; }
+        .product-card { 
+            background: var(--white); 
+            border-radius: 12px; 
+            overflow: hidden; 
+            transition: transform 0.3s, box-shadow 0.3s; 
+            border: 1px solid #eee;
+            cursor: pointer; /* Indica que es clicable */
+        }
         
-        /* SELECCIÓN DE VARIANTE (COLOR) */
-        .variant-selector { margin-bottom: 10px; }
-        .variant-selector select { width: 100%; padding: 5px; border-radius: 5px; border: 1px solid #ddd; }
-
-        .add-btn { margin-top: auto; background: var(--color-secundario); color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .add-btn:hover { background: var(--color-primario); }
-        .add-btn:disabled { background: #ccc; cursor: not-allowed; }
-
-        /* MODAL DEL CARRITO */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: white; width: 90%; max-width: 500px; padding: 20px; border-radius: 10px; max-height: 80vh; overflow-y: auto; position: relative; }
-        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 10px 0; }
-        .cart-total { text-align: right; font-size: 1.2rem; font-weight: bold; margin-top: 20px; }
-        .checkout-btn { display: block; width: 100%; background: #25D366; color: white; text-align: center; padding: 15px; margin-top: 15px; border-radius: 5px; font-weight: bold; font-size: 1.1rem; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
         
+        .product-image-container { height: 220px; overflow: hidden; background: #f4f4f4; display: flex; align-items: center; justify-content: center; }
+        .product-image { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
+        .product-card:hover .product-image { transform: scale(1.05); }
+
+        .product-info { padding: 20px; }
+        .product-cat { font-size: 0.75rem; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .product-title { font-size: 1rem; margin: 0 0 10px 0; font-weight: 700; color: var(--dark); line-height: 1.4; }
+        .product-price { font-size: 1.2rem; color: var(--dark); font-weight: 700; }
+        .view-btn { margin-top: 15px; width: 100%; padding: 10px; background: transparent; border: 1px solid var(--dark); border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .view-btn:hover { background: var(--dark); color: white; }
+
+        /* --- MODAL DE DETALLE DE PRODUCTO (ESTILO REFERENCE) --- */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
+        
+        .product-detail-content { 
+            background: white; 
+            width: 90%; 
+            max-width: 900px; 
+            border-radius: 16px; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: row; /* Diseño dividido */
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-height: 90vh;
+        }
+
+        .detail-image-col { width: 50%; background: #f8f9fa; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .detail-image-col img { max-width: 100%; max-height: 400px; object-fit: contain; }
+        
+        .detail-info-col { width: 50%; padding: 40px; overflow-y: auto; display: flex; flex-direction: column; }
+        
+        .close-modal { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #aaa; z-index: 10; background: white; border-radius: 50%; width: 30px; height: 30px; text-align: center; line-height: 30px; }
+
+        /* Tipografía del detalle */
+        .detail-cat { color: var(--gray); font-size: 0.9rem; margin-bottom: 5px; }
+        .detail-title { font-size: 2rem; font-weight: 800; margin: 0 0 10px 0; line-height: 1.1; }
+        .detail-price { font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
+        .detail-desc { color: var(--gray); line-height: 1.6; margin-bottom: 30px; font-size: 0.95rem; }
+        
+        .detail-options { margin-bottom: 20px; }
+        .detail-options label { font-weight: 600; display: block; margin-bottom: 8px; }
+        .detail-options select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
+
+        .detail-actions { display: flex; gap: 10px; margin-top: auto; }
+        .btn-add { flex: 1; padding: 15px; background: #f0f0f0; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-add:hover { background: #e0e0e0; }
+        .btn-buy { flex: 1; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-buy:hover { opacity: 0.9; }
+
+        /* MODAL DEL CARRITO (Lado derecho) */
+        .cart-modal-content { background: white; width: 100%; max-width: 400px; height: 100%; position: absolute; right: 0; padding: 20px; display: flex; flex-direction: column; box-shadow: -5px 0 20px rgba(0,0,0,0.1); }
+        .cart-items-container { flex-grow: 1; overflow-y: auto; margin: 20px 0; }
+        .cart-item { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .cart-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; }
+
         /* FOOTER */
-        footer { text-align: center; padding: 20px; background: #333; color: white; margin-top: 40px; }
+        footer { background: var(--dark); color: white; padding: 40px 20px; text-align: center; margin-top: 60px; }
 
         /* RESPONSIVE */
-        @media (max-width: 600px) {
-            .filters { padding-bottom: 15px; } /* Mejor scroll en móvil */
+        @media (max-width: 768px) {
+            .product-detail-content { flex-direction: column; width: 95%; height: 90vh; }
+            .detail-image-col { width: 100%; height: 250px; padding: 10px; }
+            .detail-info-col { width: 100%; padding: 20px; }
+            .detail-title { font-size: 1.5rem; }
+            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; } /* 2 columnas en móvil */
             .carousel { height: 200px; }
+            .product-image-container { height: 150px; }
+            .view-btn { padding: 5px; font-size: 0.8rem; }
         }
     </style>
 </head>
@@ -88,81 +140,99 @@
         <div class="nav-container">
             <div class="logo">
                 <img src="logo.jpg" alt="Logo" onerror="this.style.display='none'">
-                <span>COPA CARS</span>
+                COPA<span>CARS</span>
             </div>
             <div class="cart-icon" onclick="openCart()">
-                🛒 <span id="cart-count" class="cart-count">0</span>
+                <span>Carrito</span> 🛒 <span id="cart-count" class="cart-count">0</span>
             </div>
         </div>
     </header>
 
     <div class="carousel">
-        <div class="carousel-track" id="carousel-track">
-            </div>
+        <div class="carousel-track" id="carousel-track"></div>
     </div>
 
-    <div class="filters" id="category-filters">
-        <button class="filter-btn active" onclick="filterProducts('all')">Todos</button>
+    <div class="container">
+        <h3>Categorías</h3>
+        <div class="filters" id="category-filters">
+            <button class="filter-btn active" onclick="filterProducts('all')">Todas</button>
         </div>
 
-    <div class="container">
-        <div class="products-grid" id="products-grid">
+        <h3 style="margin-top: 30px;">Productos Populares</h3>
+        <div class="products-grid" id="products-grid"></div>
+    </div>
+
+    <div class="modal" id="product-modal">
+        <div class="product-detail-content">
+            <span class="close-modal" onclick="closeProductModal()">&times;</span>
+            
+            <div class="detail-image-col">
+                <img id="detail-img" src="" alt="Producto">
             </div>
+            
+            <div class="detail-info-col">
+                <div class="detail-cat" id="detail-cat">Categoría</div>
+                <h2 class="detail-title" id="detail-title">Nombre Producto</h2>
+                <div class="detail-price" id="detail-price">$0.00</div>
+                
+                <p class="detail-desc" id="detail-desc">
+                    Descripción del producto aquí.
+                </p>
+
+                <div class="detail-options" id="detail-options-container">
+                    </div>
+
+                <div class="detail-actions">
+                    <button class="btn-add" onclick="addToCartFromDetail()">Agregar al Carrito</button>
+                    <button class="btn-buy" onclick="buyNowFromDetail()">Comprar Ahora</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="cart-modal" style="justify-content: flex-end;">
+        <div class="cart-modal-content">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h2>Tu Pedido</h2>
+                <span style="cursor:pointer; font-size:1.5rem;" onclick="closeCart()">&times;</span>
+            </div>
+            <div class="cart-items-container" id="cart-items">
+                <p>Tu carrito está vacío.</p>
+            </div>
+            <div style="border-top: 1px solid #eee; padding-top: 20px;">
+                <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.2rem; margin-bottom:15px;">
+                    <span>Total:</span>
+                    <span id="cart-total">$0.00</span>
+                </div>
+                <button class="btn-buy" style="width:100%" onclick="checkout()">Finalizar Pedido por WhatsApp</button>
+            </div>
+        </div>
     </div>
 
     <footer>
         <p>© 2024 Copa Cars Accesorios - Ecuador</p>
-        <p>WhatsApp: +593 98 037 0222</p>
     </footer>
 
-    <div class="modal" id="cart-modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeCart()">&times;</span>
-            <h2>Tu Carrito 🛒</h2>
-            <div id="cart-items">
-                <p>Tu carrito está vacío.</p>
-            </div>
-            <div class="cart-total" id="cart-total">Total: $0.00</div>
-            <a href="#" class="checkout-btn" id="checkout-btn" onclick="checkout()">Realizar Pedido por WhatsApp</a>
-        </div>
-    </div>
-
     <script>
-        /* =============================================================
-           ÁREA DE CONFIGURACIÓN - ¡EDITA AQUÍ TUS DATOS!
-           ============================================================= */
+        /* ================= CONFIGURACIÓN ================= */
+        const PHONE_NUMBER = "593980370222"; 
         
-        const PHONE_NUMBER = "593980370222"; // Tu número sin el +
-        
-        // Configura aquí las imágenes del carrusel (Portada)
-        // Puedes poner links de internet o nombres de archivos locales
         const SLIDES = [
-            { image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1000&q=80", text: "Accesorios de Lujo" },
-            { image: "https://images.unsplash.com/photo-1562426503-12e6fd634081?auto=format&fit=crop&w=1000&q=80", text: "La mejor iluminación LED" },
-            { image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=1000&q=80", text: "Personaliza tu estilo" }
+            { image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1200&q=80", text: "Estilo y Potencia" },
+            { image: "https://images.unsplash.com/photo-1562426503-12e6fd634081?auto=format&fit=crop&w=1200&q=80", text: "Iluminación LED Premium" }
         ];
 
-        /* --- LISTA DE PRODUCTOS ---
-           Formato: 
-           id: número único
-           name: Nombre del producto
-           price: Precio en números (sin $)
-           category: Categoría exacta
-           image: URL de la foto (o nombre de archivo local)
-           stock: true (hay) o false (no hay)
-           brand: Marca (opcional)
-           variants: Lista de colores o opciones (separados por coma)
-        */
+        /* --- AGREGUÉ EL CAMPO "description" A TUS PRODUCTOS --- */
         const products = [
             {
                 id: 1,
                 name: "Tubo de Escape Deportivo",
                 price: 10.00,
                 category: "Accesorios Exterior",
-                image: "https://m.media-amazon.com/images/I/61b7b7v+LIL._AC_SL1000_.jpg", // Ejemplo foto internet
+                image: "https://m.media-amazon.com/images/I/61b7b7v+LIL._AC_SL1000_.jpg",
                 stock: true,
-                brand: "Sparco",
-                variants: ["Azul", "Rojo", "Gris"]
+                variants: ["Azul", "Rojo", "Gris"],
+                description: "Mejora el sonido y la estética de tu vehículo con este tubo de escape deportivo fabricado en acero inoxidable de alta resistencia. Fácil instalación y acabado cromado brillante."
             },
             {
                 id: 2,
@@ -171,28 +241,28 @@
                 category: "Luces led",
                 image: "https://m.media-amazon.com/images/I/71wPj-s+LBL._AC_SL1500_.jpg",
                 stock: true,
-                brand: "Genérico",
-                variants: ["RGB", "Blanco Frío"]
+                variants: ["RGB Multiclor", "Azul Eléctrico"],
+                description: "Kit de iluminación ambiental para el interior del auto. Control vía App o control remoto. Resistente al agua y con adhesivo 3M para fácil montaje."
             },
             {
                 id: 3,
-                name: "Forro de Volante Cuero",
+                name: "Forro Volante Deportivo",
                 price: 15.00,
                 category: "Accesorios interior",
                 image: "https://m.media-amazon.com/images/I/71O0R9t0+dL._AC_SL1500_.jpg",
-                stock: false, // NO DISPONIBLE
-                brand: "Momo",
-                variants: ["Negro Costura Roja", "Negro Total"]
+                stock: false,
+                variants: ["Negro Rojo", "Negro Total"],
+                description: "Protege tu volante del desgaste y mejora el agarre con este forro de cuero sintético premium. Diseño ergonómico y transpirable."
             },
             {
                 id: 4,
-                name: "Radio Pantalla 7pulg",
+                name: "Radio Pantalla 7 pulg",
                 price: 85.00,
                 category: "Radios",
                 image: "https://m.media-amazon.com/images/I/61+2z6s2+uL._AC_SL1000_.jpg",
                 stock: true,
-                brand: "Pioneer",
-                variants: ["Estándar"]
+                variants: ["Estándar"],
+                description: "Radio Android con pantalla táctil HD de 7 pulgadas. Incluye Bluetooth, GPS, entrada para cámara de reversa y compatibilidad con mandos al volante."
             },
             {
                 id: 5,
@@ -201,64 +271,49 @@
                 category: "Polarizado",
                 image: "https://images.unsplash.com/photo-1621996659490-3275b4d0d951?auto=format&fit=crop&w=500&q=60",
                 stock: true,
-                brand: "3M",
-                variants: ["5%", "20%", "35%"]
-            },
-            {
-                id: 6,
-                name: "Kit de Limpieza Interior",
-                price: 12.00,
-                category: "Ambiental",
-                image: "https://images.unsplash.com/photo-1601362840469-51e4d8d58785?auto=format&fit=crop&w=500&q=60",
-                stock: true,
-                brand: "Meguiars",
-                variants: ["Limón", "Auto Nuevo"]
+                variants: ["5% (Oscuro)", "20% (Medio)", "35% (Claro)"],
+                description: "Película de seguridad de alta tecnología que rechaza el 90% del calor y bloquea el 99% de rayos UV. Visibilidad clara desde el interior."
             }
         ];
 
-        /* =============================================================
-           FIN DE CONFIGURACIÓN - NO NECESITAS TOCAR NADA ABAJO
-           ============================================================= */
-
+        /* ================= LÓGICA ================= */
         let cart = [];
-        
-        // 1. Cargar Carrusel
+        let currentProduct = null; // Para saber qué producto se está viendo en el modal
+
+        // Inicializar Carrusel
         const track = document.getElementById('carousel-track');
         SLIDES.forEach(slide => {
             const div = document.createElement('div');
             div.className = 'carousel-slide';
             div.style.backgroundImage = `url('${slide.image}')`;
-            div.innerHTML = `<h2>${slide.text}</h2>`;
+            div.innerHTML = `<div class="carousel-text"><h2>${slide.text}</h2></div>`;
             track.appendChild(div);
         });
-        
-        // Animación simple carrusel
         let slideIndex = 0;
         setInterval(() => {
             slideIndex = (slideIndex + 1) % SLIDES.length;
             track.style.transform = `translateX(-${slideIndex * 100}%)`;
         }, 4000);
 
-        // 2. Generar Categorías dinámicamente
+        // Inicializar Filtros
         const categories = [...new Set(products.map(p => p.category))];
         const filterContainer = document.getElementById('category-filters');
-        
         categories.forEach(cat => {
             const btn = document.createElement('button');
             btn.className = 'filter-btn';
             btn.innerText = cat;
-            btn.onclick = () => filterProducts(cat);
+            btn.onclick = () => renderProducts(cat);
             filterContainer.appendChild(btn);
         });
 
-        // 3. Renderizar Productos
+        // RENDERIZAR PRODUCTOS (GRID)
         function renderProducts(filter = 'all') {
             const grid = document.getElementById('products-grid');
             grid.innerHTML = '';
             
-            // Actualizar botones de filtro
+            // Actualizar botones activos
             document.querySelectorAll('.filter-btn').forEach(b => {
-                if(filter === 'all' && b.innerText === 'Todos') b.classList.add('active');
+                if(filter === 'all' && b.innerText === 'Todas') b.classList.add('active');
                 else if(b.innerText === filter) b.classList.add('active');
                 else b.classList.remove('active');
             });
@@ -266,69 +321,103 @@
             const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
 
             filtered.forEach(p => {
-                // Crear opciones de variantes (colores)
-                let optionsHtml = '';
-                if(p.variants && p.variants.length > 0) {
-                    optionsHtml = `<div class="variant-selector">
-                        <small>Opción:</small>
-                        <select id="variant-${p.id}">
-                            ${p.variants.map(v => `<option value="${v}">${v}</option>`).join('')}
-                        </select>
-                    </div>`;
-                }
-
                 const card = document.createElement('div');
                 card.className = 'product-card';
+                // AL HACER CLIC EN LA TARJETA, SE ABRE EL DETALLE
+                card.onclick = () => openProductModal(p.id);
+                
                 card.innerHTML = `
-                    <img src="${p.image}" alt="${p.name}" class="product-image">
+                    <div class="product-image-container">
+                        <img src="${p.image}" alt="${p.name}" class="product-image">
+                    </div>
                     <div class="product-info">
                         <div class="product-cat">${p.category}</div>
-                        <div class="product-title">${p.name}</div>
-                        ${p.brand ? `<div class="product-brand">${p.brand}</div>` : ''}
+                        <h4 class="product-title">${p.name}</h4>
                         <div class="product-price">$${p.price.toFixed(2)}</div>
-                        
-                        ${p.stock 
-                            ? `<span class="stock-tag in-stock">Disponible</span>` 
-                            : `<span class="stock-tag out-stock">Agotado</span>`
-                        }
-                        
-                        ${p.stock ? optionsHtml : ''}
-                        
-                        <button class="add-btn" 
-                            ${!p.stock ? 'disabled' : ''} 
-                            onclick="addToCart(${p.id})">
-                            ${p.stock ? 'Agregar al Carrito' : 'Sin Stock'}
-                        </button>
+                        <button class="view-btn">Ver Detalles</button>
                     </div>
                 `;
                 grid.appendChild(card);
             });
         }
 
-        // 4. Lógica del Carrito
-        function addToCart(id) {
-            const product = products.find(p => p.id === id);
-            const variantSelect = document.getElementById(`variant-${id}`);
+        // --- FUNCIONES DEL MODAL DE DETALLE (NUEVO) ---
+        function openProductModal(id) {
+            currentProduct = products.find(p => p.id === id);
+            
+            // Llenar datos
+            document.getElementById('detail-img').src = currentProduct.image;
+            document.getElementById('detail-cat').innerText = currentProduct.category;
+            document.getElementById('detail-title').innerText = currentProduct.name;
+            document.getElementById('detail-price').innerText = `$${currentProduct.price.toFixed(2)}`;
+            document.getElementById('detail-desc').innerText = currentProduct.description || "Sin descripción disponible.";
+
+            // Generar selector de variantes si existen
+            const optionsContainer = document.getElementById('detail-options-container');
+            if (currentProduct.variants && currentProduct.variants.length > 0) {
+                optionsContainer.innerHTML = `
+                    <label>Selecciona Opción:</label>
+                    <select id="modal-variant-select">
+                        ${currentProduct.variants.map(v => `<option value="${v}">${v}</option>`).join('')}
+                    </select>
+                `;
+            } else {
+                optionsContainer.innerHTML = '';
+            }
+
+            // Deshabilitar botones si no hay stock
+            const btnAdd = document.querySelector('.btn-add');
+            const btnBuy = document.querySelector('.btn-buy');
+            
+            if(!currentProduct.stock) {
+                btnAdd.disabled = true;
+                btnAdd.innerText = "Agotado";
+                btnBuy.style.display = 'none';
+            } else {
+                btnAdd.disabled = false;
+                btnAdd.innerText = "Agregar al Carrito";
+                btnBuy.style.display = 'block';
+            }
+
+            // Mostrar modal
+            document.getElementById('product-modal').style.display = 'flex';
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').style.display = 'none';
+        }
+
+        // --- FUNCIONES DE COMPRA DESDE EL DETALLE ---
+        function addToCartFromDetail() {
+            if(!currentProduct) return;
+            
+            const variantSelect = document.getElementById('modal-variant-select');
             const selectedVariant = variantSelect ? variantSelect.value : 'Estándar';
             
-            // Crear ID único para producto + variante
-            const cartItemId = `${id}-${selectedVariant}`;
+            const cartItemId = `${currentProduct.id}-${selectedVariant}`;
             const existingItem = cart.find(item => item.cartId === cartItemId);
 
             if (existingItem) {
                 existingItem.quantity++;
             } else {
                 cart.push({
-                    ...product,
+                    ...currentProduct,
                     cartId: cartItemId,
                     selectedVariant: selectedVariant,
                     quantity: 1
                 });
             }
             updateCartUI();
-            openCart(); // Opcional: abrir carrito al agregar
+            closeProductModal();
+            openCart(); // Abrir carrito para confirmar
         }
 
+        function buyNowFromDetail() {
+            addToCartFromDetail();
+            // Opcional: Podrías llamar a checkout() directamente aquí si prefieres saltar el carrito
+        }
+
+        // --- LÓGICA DE CARRITO (Igual que antes pero estilizado) ---
         function removeFromCart(cartId) {
             cart = cart.filter(item => item.cartId !== cartId);
             updateCartUI();
@@ -336,70 +425,58 @@
 
         function updateCartUI() {
             document.getElementById('cart-count').innerText = cart.reduce((acc, item) => acc + item.quantity, 0);
-            
             const itemsContainer = document.getElementById('cart-items');
             itemsContainer.innerHTML = '';
-            
             let total = 0;
             
             if (cart.length === 0) {
-                itemsContainer.innerHTML = '<p>Tu carrito está vacío.</p>';
-                document.getElementById('checkout-btn').style.display = 'none';
+                itemsContainer.innerHTML = '<p style="text-align:center; color:#888;">Tu carrito está vacío.</p>';
             } else {
-                document.getElementById('checkout-btn').style.display = 'block';
                 cart.forEach(item => {
                     const itemTotal = item.price * item.quantity;
                     total += itemTotal;
                     itemsContainer.innerHTML += `
                         <div class="cart-item">
-                            <div>
-                                <strong>${item.name}</strong> <br>
-                                <small>${item.selectedVariant}</small> <br>
-                                <small>$${item.price.toFixed(2)} x ${item.quantity}</small>
+                            <img src="${item.image}" alt="img">
+                            <div style="flex-grow:1;">
+                                <div style="font-weight:bold; font-size:0.9rem;">${item.name}</div>
+                                <div style="font-size:0.8rem; color:#666;">${item.selectedVariant}</div>
+                                <div style="font-size:0.9rem;">$${item.price.toFixed(2)} x ${item.quantity}</div>
                             </div>
-                            <div style="text-align:right">
-                                <div>$${itemTotal.toFixed(2)}</div>
-                                <small style="color:red; cursor:pointer" onclick="removeFromCart('${item.cartId}')">Eliminar</small>
+                            <div style="display:flex; flex-direction:column; justify-content:space-between; align-items:flex-end;">
+                                <div style="font-weight:bold;">$${itemTotal.toFixed(2)}</div>
+                                <small style="color:red; cursor:pointer;" onclick="removeFromCart('${item.cartId}')">Eliminar</small>
                             </div>
                         </div>
                     `;
                 });
             }
-            document.getElementById('cart-total').innerText = `Total: $${total.toFixed(2)}`;
+            document.getElementById('cart-total').innerText = `$${total.toFixed(2)}`;
         }
 
         function openCart() { document.getElementById('cart-modal').style.display = 'flex'; }
         function closeCart() { document.getElementById('cart-modal').style.display = 'none'; }
 
-        // 5. Checkout WhatsApp
         function checkout() {
             if (cart.length === 0) return;
-            
-            let message = "Hola Copa Cars, quiero realizar el siguiente pedido:%0A%0A";
+            let message = "Hola Copa Cars, deseo pedir:%0A%0A";
             let total = 0;
-            
             cart.forEach(item => {
-                const subtotal = item.price * item.quantity;
-                total += subtotal;
-                message += `▪️ ${item.quantity}x ${item.name} (${item.selectedVariant}) - $${subtotal.toFixed(2)}%0A`;
+                total += item.price * item.quantity;
+                message += `▪️ ${item.quantity}x ${item.name} (${item.selectedVariant}) - $${(item.price * item.quantity).toFixed(2)}%0A`;
             });
-            
-            message += `%0A*TOTAL A PAGAR: $${total.toFixed(2)}*`;
-            message += "%0A%0APor favor confírmeme disponibilidad y método de pago.";
-            
-            const url = `https://wa.me/${PHONE_NUMBER}?text=${message}`;
-            window.open(url, '_blank');
+            message += `%0A*TOTAL: $${total.toFixed(2)}*`;
+            message += "%0A%0A¿Me confirma disponibilidad?";
+            window.open(`https://wa.me/${PHONE_NUMBER}?text=${message}`, '_blank');
         }
 
-        // Cerrar modal si clic fuera
+        // Cerrar modales al hacer clic fuera
         window.onclick = function(event) {
-            const modal = document.getElementById('cart-modal');
-            if (event.target == modal) closeCart();
+            if (event.target == document.getElementById('cart-modal')) closeCart();
+            if (event.target == document.getElementById('product-modal')) closeProductModal();
         }
 
-        // Inicializar
         renderProducts();
-
     </script>
 </body>
 </html>
