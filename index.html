@@ -9,7 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     
     <style>
-        /* --- ESTILOS (Mismo diseño limpio anterior) --- */
+        /* --- ESTILOS --- */
         :root { --primary: #FF8C00; --dark: #1a1a1a; --gray: #666666; --light: #f8f9fa; --white: #ffffff; --shadow: 0 4px 20px rgba(0,0,0,0.08); }
         body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; background-color: var(--light); color: var(--dark); }
         * { box-sizing: border-box; } a { text-decoration: none; color: inherit; }
@@ -137,7 +137,7 @@
     <script>
         const PHONE_NUMBER = "593980370222"; 
         
-        // ¡¡¡ PEGA AQUÍ TU ENLACE DE GOOGLE SHEETS (CSV) !!!
+        // TU ENLACE YA ESTÁ PUESTO AQUÍ:
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR4XiOIAqib5wdMK5UU__AInDUCYkfTa8ztC--R49-Ad1l-WE_9mWdVP9n4363erXq3Qskg2RoYNxF-/pub?output=csv"; 
 
         let products = [];
@@ -146,18 +146,13 @@
 
         // Cargar datos al iniciar
         window.onload = function() {
-            if(SHEET_URL === "https://docs.google.com/spreadsheets/d/e/2PACX-1vR4XiOIAqib5wdMK5UU__AInDUCYkfTa8ztC--R49-Ad1l-WE_9mWdVP9n4363erXq3Qskg2RoYNxF-/pub?output=csv") {
-                document.getElementById('loading').innerText = "¡Error! Falta configurar el enlace de Google Sheets en el código.";
-                return;
-            }
-
+            // He quitado el bloque IF que daba error. Ahora carga directo.
             Papa.parse(SHEET_URL, {
                 download: true,
                 header: true,
                 complete: function(results) {
                     console.log("Datos cargados:", results.data);
                     
-                    // Procesar datos del Excel al formato de la web
                     products = results.data
                         .filter(row => row.name && row.price) // Ignorar filas vacías
                         .map(row => ({
@@ -165,7 +160,6 @@
                             name: row.name,
                             price: parseFloat(row.price),
                             category: row.category,
-                            // Convertir texto "foto1.jpg,foto2.jpg" en lista ["foto1.jpg", "foto2.jpg"]
                             images: row.images ? row.images.split(',').map(s => s.trim()) : ['logo.jpg'],
                             stock: row.stock && row.stock.toLowerCase() === 'true',
                             variants: row.variants ? row.variants.split(',').map(s => s.trim()) : [],
@@ -183,7 +177,6 @@
         };
 
         function initApp() {
-            // Filtros
             const categories = [...new Set(products.map(p => p.category))];
             const filterContainer = document.getElementById('category-filters');
             filterContainer.innerHTML = '<button class="filter-btn active" onclick="renderProducts(\'all\')">Todas</button>';
@@ -197,7 +190,6 @@
             const grid = document.getElementById('products-grid');
             grid.innerHTML = '';
             
-            // Actualizar botones
             document.querySelectorAll('.filter-btn').forEach(b => {
                 if(b.innerText === filter || (filter === 'all' && b.innerText === 'Todas')) b.classList.add('active');
                 else b.classList.remove('active');
@@ -206,7 +198,7 @@
             const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
 
             filtered.forEach(p => {
-                const coverImage = p.images[0].startsWith('http') ? p.images[0] : p.images[0];
+                const coverImage = p.images[0].startsWith('http') || p.images[0].endsWith('jpg') ? p.images[0] : 'logo.jpg';
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 card.onclick = () => openProductModal(p.id);
@@ -224,11 +216,10 @@
         }
 
         function openProductModal(id) {
-            currentProduct = products.find(p => p.id == id); // Usar == por si id es texto en excel
+            currentProduct = products.find(p => p.id == id); 
             const mainImg = document.getElementById('detail-main-img');
             mainImg.src = currentProduct.images[0];
             
-            // Miniaturas
             const thumbContainer = document.getElementById('detail-thumbnails');
             thumbContainer.innerHTML = '';
             if(currentProduct.images.length > 1) {
@@ -245,7 +236,6 @@
             document.getElementById('detail-price').innerText = `$${currentProduct.price.toFixed(2)}`;
             document.getElementById('detail-desc').innerText = currentProduct.description || "";
 
-            // Variantes
             const optContainer = document.getElementById('detail-options-container');
             if(currentProduct.variants.length > 0) {
                 optContainer.innerHTML = `<label>Opción:</label><select id="variant-select">${currentProduct.variants.map(v=>`<option>${v}</option>`).join('')}</select>`;
@@ -253,7 +243,6 @@
                 optContainer.innerHTML = '';
             }
 
-            // Stock
             const btnAdd = document.querySelector('.btn-add');
             const btnBuy = document.querySelector('.btn-buy');
             if(!currentProduct.stock) {
