@@ -29,7 +29,6 @@
         .logo { font-size: 1.5rem; font-weight: 800; color: var(--dark); display: flex; align-items: center; gap: 10px; }
         .logo span { color: var(--primary); }
         .logo img { height: 40px; }
-        
         .cart-icon { position: relative; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; font-weight: 600; }
         .cart-count { background: var(--primary); color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; justify-content: center; align-items: center; font-size: 0.75rem; }
 
@@ -48,24 +47,13 @@
         .filter-btn { background: var(--white); border: 1px solid #ddd; padding: 8px 20px; border-radius: 30px; cursor: pointer; transition: 0.3s; font-weight: 500; white-space: nowrap; }
         .filter-btn:hover, .filter-btn.active { background: var(--dark); color: white; border-color: var(--dark); }
 
-        /* GRID PRODUCTOS (Inspirado en QuickCart) */
+        /* GRID PRODUCTOS */
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px; }
-        
-        .product-card { 
-            background: var(--white); 
-            border-radius: 12px; 
-            overflow: hidden; 
-            transition: transform 0.3s, box-shadow 0.3s; 
-            border: 1px solid #eee;
-            cursor: pointer; /* Indica que es clicable */
-        }
-        
+        .product-card { background: var(--white); border-radius: 12px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; border: 1px solid #eee; cursor: pointer; }
         .product-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
-        
         .product-image-container { height: 220px; overflow: hidden; background: #f4f4f4; display: flex; align-items: center; justify-content: center; }
         .product-image { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
         .product-card:hover .product-image { transform: scale(1.05); }
-
         .product-info { padding: 20px; }
         .product-cat { font-size: 0.75rem; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
         .product-title { font-size: 1rem; margin: 0 0 10px 0; font-weight: 700; color: var(--dark); line-height: 1.4; }
@@ -73,46 +61,35 @@
         .view-btn { margin-top: 15px; width: 100%; padding: 10px; background: transparent; border: 1px solid var(--dark); border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .view-btn:hover { background: var(--dark); color: white; }
 
-        /* --- MODAL DE DETALLE DE PRODUCTO (ESTILO REFERENCE) --- */
+        /* MODAL DE DETALLE */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
+        .product-detail-content { background: white; width: 90%; max-width: 900px; border-radius: 16px; overflow: hidden; display: flex; flex-direction: row; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.2); max-height: 90vh; }
         
-        .product-detail-content { 
-            background: white; 
-            width: 90%; 
-            max-width: 900px; 
-            border-radius: 16px; 
-            overflow: hidden; 
-            display: flex; 
-            flex-direction: row; /* Diseño dividido */
-            position: relative;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            max-height: 90vh;
-        }
+        /* GALERÍA DE IMÁGENES EN EL MODAL */
+        .detail-image-col { width: 50%; background: #f8f9fa; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .main-image-view { width: 100%; height: 350px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 10px; }
+        .main-image-view img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        
+        .thumbnails-row { display: flex; gap: 10px; width: 100%; overflow-x: auto; padding: 5px; justify-content: center; }
+        .thumb-img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; border: 2px solid transparent; cursor: pointer; transition: 0.2s; opacity: 0.7; }
+        .thumb-img:hover, .thumb-img.active-thumb { border-color: var(--primary); opacity: 1; }
 
-        .detail-image-col { width: 50%; background: #f8f9fa; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .detail-image-col img { max-width: 100%; max-height: 400px; object-fit: contain; }
-        
         .detail-info-col { width: 50%; padding: 40px; overflow-y: auto; display: flex; flex-direction: column; }
-        
         .close-modal { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #aaa; z-index: 10; background: white; border-radius: 50%; width: 30px; height: 30px; text-align: center; line-height: 30px; }
-
-        /* Tipografía del detalle */
         .detail-cat { color: var(--gray); font-size: 0.9rem; margin-bottom: 5px; }
         .detail-title { font-size: 2rem; font-weight: 800; margin: 0 0 10px 0; line-height: 1.1; }
         .detail-price { font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
         .detail-desc { color: var(--gray); line-height: 1.6; margin-bottom: 30px; font-size: 0.95rem; }
-        
         .detail-options { margin-bottom: 20px; }
         .detail-options label { font-weight: 600; display: block; margin-bottom: 8px; }
         .detail-options select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
-
         .detail-actions { display: flex; gap: 10px; margin-top: auto; }
         .btn-add { flex: 1; padding: 15px; background: #f0f0f0; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .btn-add:hover { background: #e0e0e0; }
         .btn-buy { flex: 1; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .btn-buy:hover { opacity: 0.9; }
 
-        /* MODAL DEL CARRITO (Lado derecho) */
+        /* MODAL CARRITO */
         .cart-modal-content { background: white; width: 100%; max-width: 400px; height: 100%; position: absolute; right: 0; padding: 20px; display: flex; flex-direction: column; box-shadow: -5px 0 20px rgba(0,0,0,0.1); }
         .cart-items-container { flex-grow: 1; overflow-y: auto; margin: 20px 0; }
         .cart-item { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
@@ -123,13 +100,13 @@
 
         /* RESPONSIVE */
         @media (max-width: 768px) {
-            .product-detail-content { flex-direction: column; width: 95%; height: 90vh; }
-            .detail-image-col { width: 100%; height: 250px; padding: 10px; }
+            .product-detail-content { flex-direction: column; width: 95%; height: 90vh; overflow-y: auto; }
+            .detail-image-col { width: 100%; height: auto; padding: 10px; }
+            .main-image-view { height: 250px; }
             .detail-info-col { width: 100%; padding: 20px; }
             .detail-title { font-size: 1.5rem; }
-            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; } /* 2 columnas en móvil */
+            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
             .carousel { height: 200px; }
-            .product-image-container { height: 150px; }
             .view-btn { padding: 5px; font-size: 0.8rem; }
         }
     </style>
@@ -157,7 +134,6 @@
         <div class="filters" id="category-filters">
             <button class="filter-btn active" onclick="filterProducts('all')">Todas</button>
         </div>
-
         <h3 style="margin-top: 30px;">Productos Populares</h3>
         <div class="products-grid" id="products-grid"></div>
     </div>
@@ -165,23 +141,19 @@
     <div class="modal" id="product-modal">
         <div class="product-detail-content">
             <span class="close-modal" onclick="closeProductModal()">&times;</span>
-            
             <div class="detail-image-col">
-                <img id="detail-img" src="" alt="Producto">
+                <div class="main-image-view">
+                    <img id="detail-main-img" src="" alt="Producto">
+                </div>
+                <div class="thumbnails-row" id="detail-thumbnails">
+                    </div>
             </div>
-            
             <div class="detail-info-col">
                 <div class="detail-cat" id="detail-cat">Categoría</div>
                 <h2 class="detail-title" id="detail-title">Nombre Producto</h2>
                 <div class="detail-price" id="detail-price">$0.00</div>
-                
-                <p class="detail-desc" id="detail-desc">
-                    Descripción del producto aquí.
-                </p>
-
-                <div class="detail-options" id="detail-options-container">
-                    </div>
-
+                <p class="detail-desc" id="detail-desc">Descripción...</p>
+                <div class="detail-options" id="detail-options-container"></div>
                 <div class="detail-actions">
                     <button class="btn-add" onclick="addToCartFromDetail()">Agregar al Carrito</button>
                     <button class="btn-buy" onclick="buyNowFromDetail()">Comprar Ahora</button>
@@ -214,7 +186,6 @@
     </footer>
 
     <script>
-        /* ================= CONFIGURACIÓN ================= */
         const PHONE_NUMBER = "593980370222"; 
         
         const SLIDES = [
@@ -222,65 +193,81 @@
             { image: "https://images.unsplash.com/photo-1562426503-12e6fd634081?auto=format&fit=crop&w=1200&q=80", text: "Iluminación LED Premium" }
         ];
 
-        /* --- AGREGUÉ EL CAMPO "description" A TUS PRODUCTOS --- */
+        /* --- CONFIGURACIÓN DE PRODUCTOS (AHORA CON VARIAS FOTOS) --- 
+           NOTA: En lugar de "image", ahora usamos "images" (en plural y con corchetes [])
+           La primera foto de la lista será la portada.
+        */
         const products = [
             {
                 id: 1,
                 name: "Tubo de Escape Deportivo",
                 price: 10.00,
                 category: "Accesorios Exterior",
-                image: "https://m.media-amazon.com/images/I/61b7b7v+LIL._AC_SL1000_.jpg",
+                // AQUÍ AGREGAS LAS FOTOS SEPARADAS POR COMA
+                images: [
+                    "https://m.media-amazon.com/images/I/61b7b7v+LIL._AC_SL1000_.jpg", 
+                    "https://m.media-amazon.com/images/I/71wPj-s+LBL._AC_SL1500_.jpg",
+                    "logo.jpg"
+                ],
                 stock: true,
                 variants: ["Azul", "Rojo", "Gris"],
-                description: "Mejora el sonido y la estética de tu vehículo con este tubo de escape deportivo fabricado en acero inoxidable de alta resistencia. Fácil instalación y acabado cromado brillante."
+                description: "Tubo de escape deportivo de acero inoxidable."
             },
             {
                 id: 2,
                 name: "Luces LED Neón",
                 price: 25.50,
                 category: "Luces led",
-                image: "https://m.media-amazon.com/images/I/71wPj-s+LBL._AC_SL1500_.jpg",
+                images: [
+                    "https://m.media-amazon.com/images/I/71wPj-s+LBL._AC_SL1500_.jpg"
+                ],
                 stock: true,
                 variants: ["RGB Multiclor", "Azul Eléctrico"],
-                description: "Kit de iluminación ambiental para el interior del auto. Control vía App o control remoto. Resistente al agua y con adhesivo 3M para fácil montaje."
+                description: "Kit de iluminación ambiental para el interior."
             },
             {
                 id: 3,
                 name: "Forro Volante Deportivo",
                 price: 15.00,
                 category: "Accesorios interior",
-                image: "https://m.media-amazon.com/images/I/71O0R9t0+dL._AC_SL1500_.jpg",
+                images: [
+                    "https://m.media-amazon.com/images/I/71O0R9t0+dL._AC_SL1500_.jpg"
+                ],
                 stock: false,
                 variants: ["Negro Rojo", "Negro Total"],
-                description: "Protege tu volante del desgaste y mejora el agarre con este forro de cuero sintético premium. Diseño ergonómico y transpirable."
+                description: "Protege tu volante con cuero sintético premium."
             },
             {
                 id: 4,
                 name: "Radio Pantalla 7 pulg",
                 price: 85.00,
                 category: "Radios",
-                image: "https://m.media-amazon.com/images/I/61+2z6s2+uL._AC_SL1000_.jpg",
+                images: [
+                    "https://m.media-amazon.com/images/I/61+2z6s2+uL._AC_SL1000_.jpg"
+                ],
                 stock: true,
                 variants: ["Estándar"],
-                description: "Radio Android con pantalla táctil HD de 7 pulgadas. Incluye Bluetooth, GPS, entrada para cámara de reversa y compatibilidad con mandos al volante."
+                description: "Radio Android con pantalla táctil HD."
             },
             {
                 id: 5,
                 name: "Polarizado Nano-Cerámica",
                 price: 60.00,
                 category: "Polarizado",
-                image: "https://images.unsplash.com/photo-1621996659490-3275b4d0d951?auto=format&fit=crop&w=500&q=60",
+                images: [
+                    "https://images.unsplash.com/photo-1621996659490-3275b4d0d951?auto=format&fit=crop&w=500&q=60"
+                ],
                 stock: true,
-                variants: ["5% (Oscuro)", "20% (Medio)", "35% (Claro)"],
-                description: "Película de seguridad de alta tecnología que rechaza el 90% del calor y bloquea el 99% de rayos UV. Visibilidad clara desde el interior."
+                variants: ["5%", "20%", "35%"],
+                description: "Película de seguridad de alta tecnología."
             }
         ];
 
-        /* ================= LÓGICA ================= */
+        /* ================= LÓGICA DEL SISTEMA ================= */
         let cart = [];
-        let currentProduct = null; // Para saber qué producto se está viendo en el modal
+        let currentProduct = null; 
 
-        // Inicializar Carrusel
+        // Carrusel
         const track = document.getElementById('carousel-track');
         SLIDES.forEach(slide => {
             const div = document.createElement('div');
@@ -295,7 +282,7 @@
             track.style.transform = `translateX(-${slideIndex * 100}%)`;
         }, 4000);
 
-        // Inicializar Filtros
+        // Filtros
         const categories = [...new Set(products.map(p => p.category))];
         const filterContainer = document.getElementById('category-filters');
         categories.forEach(cat => {
@@ -306,12 +293,11 @@
             filterContainer.appendChild(btn);
         });
 
-        // RENDERIZAR PRODUCTOS (GRID)
+        // Renderizar Grid
         function renderProducts(filter = 'all') {
             const grid = document.getElementById('products-grid');
             grid.innerHTML = '';
             
-            // Actualizar botones activos
             document.querySelectorAll('.filter-btn').forEach(b => {
                 if(filter === 'all' && b.innerText === 'Todas') b.classList.add('active');
                 else if(b.innerText === filter) b.classList.add('active');
@@ -323,12 +309,13 @@
             filtered.forEach(p => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
-                // AL HACER CLIC EN LA TARJETA, SE ABRE EL DETALLE
                 card.onclick = () => openProductModal(p.id);
+                // Usamos la primera imagen (images[0]) como portada
+                const coverImage = p.images && p.images.length > 0 ? p.images[0] : 'logo.jpg';
                 
                 card.innerHTML = `
                     <div class="product-image-container">
-                        <img src="${p.image}" alt="${p.name}" class="product-image">
+                        <img src="${coverImage}" alt="${p.name}" class="product-image">
                     </div>
                     <div class="product-info">
                         <div class="product-cat">${p.category}</div>
@@ -341,18 +328,42 @@
             });
         }
 
-        // --- FUNCIONES DEL MODAL DE DETALLE (NUEVO) ---
+        // --- FUNCIONES DEL MODAL CON GALERÍA ---
         function openProductModal(id) {
             currentProduct = products.find(p => p.id === id);
             
-            // Llenar datos
-            document.getElementById('detail-img').src = currentProduct.image;
+            // 1. Mostrar la primera foto en grande
+            const mainImg = document.getElementById('detail-main-img');
+            const mainImageSrc = currentProduct.images && currentProduct.images.length > 0 ? currentProduct.images[0] : 'logo.jpg';
+            mainImg.src = mainImageSrc;
+            
+            // 2. Generar las miniaturas
+            const thumbContainer = document.getElementById('detail-thumbnails');
+            thumbContainer.innerHTML = ''; // Limpiar anteriores
+            
+            if(currentProduct.images && currentProduct.images.length > 1) {
+                currentProduct.images.forEach(imgSrc => {
+                    const thumb = document.createElement('img');
+                    thumb.src = imgSrc;
+                    thumb.className = 'thumb-img';
+                    thumb.onclick = function() {
+                        // Cambiar foto grande al hacer clic
+                        mainImg.src = imgSrc;
+                        // Estilo activo
+                        document.querySelectorAll('.thumb-img').forEach(t => t.classList.remove('active-thumb'));
+                        thumb.classList.add('active-thumb');
+                    };
+                    thumbContainer.appendChild(thumb);
+                });
+            }
+
+            // Datos de texto
             document.getElementById('detail-cat').innerText = currentProduct.category;
             document.getElementById('detail-title').innerText = currentProduct.name;
             document.getElementById('detail-price').innerText = `$${currentProduct.price.toFixed(2)}`;
             document.getElementById('detail-desc').innerText = currentProduct.description || "Sin descripción disponible.";
 
-            // Generar selector de variantes si existen
+            // Variantes
             const optionsContainer = document.getElementById('detail-options-container');
             if (currentProduct.variants && currentProduct.variants.length > 0) {
                 optionsContainer.innerHTML = `
@@ -365,7 +376,7 @@
                 optionsContainer.innerHTML = '';
             }
 
-            // Deshabilitar botones si no hay stock
+            // Botones Stock
             const btnAdd = document.querySelector('.btn-add');
             const btnBuy = document.querySelector('.btn-buy');
             
@@ -379,29 +390,28 @@
                 btnBuy.style.display = 'block';
             }
 
-            // Mostrar modal
             document.getElementById('product-modal').style.display = 'flex';
         }
 
-        function closeProductModal() {
-            document.getElementById('product-modal').style.display = 'none';
-        }
+        function closeProductModal() { document.getElementById('product-modal').style.display = 'none'; }
 
-        // --- FUNCIONES DE COMPRA DESDE EL DETALLE ---
+        // --- CARRITO Y COMPRA ---
         function addToCartFromDetail() {
             if(!currentProduct) return;
-            
             const variantSelect = document.getElementById('modal-variant-select');
             const selectedVariant = variantSelect ? variantSelect.value : 'Estándar';
-            
             const cartItemId = `${currentProduct.id}-${selectedVariant}`;
             const existingItem = cart.find(item => item.cartId === cartItemId);
+            
+            // Usamos la primera imagen para mostrar en el carrito
+            const itemImage = currentProduct.images && currentProduct.images.length > 0 ? currentProduct.images[0] : 'logo.jpg';
 
             if (existingItem) {
                 existingItem.quantity++;
             } else {
                 cart.push({
                     ...currentProduct,
+                    image: itemImage, // Guardamos la imagen principal para el carrito
                     cartId: cartItemId,
                     selectedVariant: selectedVariant,
                     quantity: 1
@@ -409,15 +419,11 @@
             }
             updateCartUI();
             closeProductModal();
-            openCart(); // Abrir carrito para confirmar
+            openCart();
         }
 
-        function buyNowFromDetail() {
-            addToCartFromDetail();
-            // Opcional: Podrías llamar a checkout() directamente aquí si prefieres saltar el carrito
-        }
+        function buyNowFromDetail() { addToCartFromDetail(); }
 
-        // --- LÓGICA DE CARRITO (Igual que antes pero estilizado) ---
         function removeFromCart(cartId) {
             cart = cart.filter(item => item.cartId !== cartId);
             updateCartUI();
@@ -470,7 +476,6 @@
             window.open(`https://wa.me/${PHONE_NUMBER}?text=${message}`, '_blank');
         }
 
-        // Cerrar modales al hacer clic fuera
         window.onclick = function(event) {
             if (event.target == document.getElementById('cart-modal')) closeCart();
             if (event.target == document.getElementById('product-modal')) closeProductModal();
