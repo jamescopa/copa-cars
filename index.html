@@ -6,48 +6,27 @@
     <title>Copa Cars Accesorios | Catálogo</title>
     <link rel="icon" href="logo.jpg" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     
     <style>
-        /* --- CONFIGURACIÓN DE COLORES --- */
-        :root {
-            --primary: #FF8C00; /* Naranja Copa Cars */
-            --dark: #1a1a1a;
-            --gray: #666666;
-            --light: #f8f9fa;
-            --white: #ffffff;
-            --shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-
-        /* --- ESTILOS GENERALES --- */
+        /* --- ESTILOS (Mismo diseño limpio anterior) --- */
+        :root { --primary: #FF8C00; --dark: #1a1a1a; --gray: #666666; --light: #f8f9fa; --white: #ffffff; --shadow: 0 4px 20px rgba(0,0,0,0.08); }
         body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; background-color: var(--light); color: var(--dark); }
-        a { text-decoration: none; color: inherit; }
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; } a { text-decoration: none; color: inherit; }
 
-        /* HEADER */
         header { background-color: var(--white); padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.5rem; font-weight: 800; color: var(--dark); display: flex; align-items: center; gap: 10px; }
         .logo span { color: var(--primary); }
         .logo img { height: 40px; }
-        .cart-icon { position: relative; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; font-weight: 600; }
+        .cart-icon { cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; font-weight: 600; }
         .cart-count { background: var(--primary); color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; justify-content: center; align-items: center; font-size: 0.75rem; }
 
-        /* HERO / CARRUSEL */
-        .carousel { position: relative; width: 100%; height: 350px; overflow: hidden; background: #eee; }
-        .carousel-track { display: flex; transition: transform 0.5s ease-in-out; height: 100%; }
-        .carousel-slide { min-width: 100%; height: 100%; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; }
-        .carousel-text { background: rgba(0,0,0,0.5); color: white; padding: 20px 40px; border-radius: 8px; text-align: center; backdrop-filter: blur(5px); }
-        .carousel-text h2 { margin: 0; font-size: 2rem; }
-
-        /* CONTENEDOR PRINCIPAL */
         .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-
-        /* FILTROS */
         .filters { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 20px; margin-bottom: 20px; scrollbar-width: none; }
         .filter-btn { background: var(--white); border: 1px solid #ddd; padding: 8px 20px; border-radius: 30px; cursor: pointer; transition: 0.3s; font-weight: 500; white-space: nowrap; }
         .filter-btn:hover, .filter-btn.active { background: var(--dark); color: white; border-color: var(--dark); }
 
-        /* GRID PRODUCTOS */
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px; }
         .product-card { background: var(--white); border-radius: 12px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; border: 1px solid #eee; cursor: pointer; }
         .product-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
@@ -61,54 +40,37 @@
         .view-btn { margin-top: 15px; width: 100%; padding: 10px; background: transparent; border: 1px solid var(--dark); border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .view-btn:hover { background: var(--dark); color: white; }
 
-        /* MODAL DE DETALLE */
+        /* MODALES */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
         .product-detail-content { background: white; width: 90%; max-width: 900px; border-radius: 16px; overflow: hidden; display: flex; flex-direction: row; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.2); max-height: 90vh; }
         
-        /* GALERÍA DE IMÁGENES EN EL MODAL */
         .detail-image-col { width: 50%; background: #f8f9fa; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .main-image-view { width: 100%; height: 350px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 10px; }
         .main-image-view img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        
         .thumbnails-row { display: flex; gap: 10px; width: 100%; overflow-x: auto; padding: 5px; justify-content: center; }
         .thumb-img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; border: 2px solid transparent; cursor: pointer; transition: 0.2s; opacity: 0.7; }
         .thumb-img:hover, .thumb-img.active-thumb { border-color: var(--primary); opacity: 1; }
 
         .detail-info-col { width: 50%; padding: 40px; overflow-y: auto; display: flex; flex-direction: column; }
         .close-modal { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #aaa; z-index: 10; background: white; border-radius: 50%; width: 30px; height: 30px; text-align: center; line-height: 30px; }
-        .detail-cat { color: var(--gray); font-size: 0.9rem; margin-bottom: 5px; }
-        .detail-title { font-size: 2rem; font-weight: 800; margin: 0 0 10px 0; line-height: 1.1; }
+        .detail-title { font-size: 2rem; font-weight: 800; margin: 0 0 10px 0; }
         .detail-price { font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
-        .detail-desc { color: var(--gray); line-height: 1.6; margin-bottom: 30px; font-size: 0.95rem; }
-        .detail-options { margin-bottom: 20px; }
-        .detail-options label { font-weight: 600; display: block; margin-bottom: 8px; }
-        .detail-options select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
         .detail-actions { display: flex; gap: 10px; margin-top: auto; }
-        .btn-add { flex: 1; padding: 15px; background: #f0f0f0; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .btn-add:hover { background: #e0e0e0; }
-        .btn-buy { flex: 1; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .btn-buy:hover { opacity: 0.9; }
-
-        /* MODAL CARRITO */
-        .cart-modal-content { background: white; width: 100%; max-width: 400px; height: 100%; position: absolute; right: 0; padding: 20px; display: flex; flex-direction: column; box-shadow: -5px 0 20px rgba(0,0,0,0.1); }
+        .btn-add, .btn-buy { flex: 1; padding: 15px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; }
+        .btn-add { background: #f0f0f0; } .btn-buy { background: var(--primary); color: white; }
+        
+        .cart-modal-content { background: white; width: 100%; max-width: 400px; height: 100%; position: absolute; right: 0; padding: 20px; display: flex; flex-direction: column; }
         .cart-items-container { flex-grow: 1; overflow-y: auto; margin: 20px 0; }
         .cart-item { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-        .cart-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; }
 
-        /* FOOTER */
-        footer { background: var(--dark); color: white; padding: 40px 20px; text-align: center; margin-top: 60px; }
-
-        /* RESPONSIVE */
         @media (max-width: 768px) {
             .product-detail-content { flex-direction: column; width: 95%; height: 90vh; overflow-y: auto; }
-            .detail-image-col { width: 100%; height: auto; padding: 10px; }
-            .main-image-view { height: 250px; }
-            .detail-info-col { width: 100%; padding: 20px; }
-            .detail-title { font-size: 1.5rem; }
-            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
-            .carousel { height: 200px; }
-            .view-btn { padding: 5px; font-size: 0.8rem; }
+            .detail-image-col, .detail-info-col { width: 100%; padding: 15px; }
+            .main-image-view { height: 200px; }
         }
+        
+        /* Loading Spinner */
+        #loading { text-align: center; padding: 50px; font-size: 1.2rem; color: var(--gray); }
     </style>
 </head>
 <body>
@@ -125,16 +87,13 @@
         </div>
     </header>
 
-    <div class="carousel">
-        <div class="carousel-track" id="carousel-track"></div>
-    </div>
-
     <div class="container">
         <h3>Categorías</h3>
         <div class="filters" id="category-filters">
-            <button class="filter-btn active" onclick="filterProducts('all')">Todas</button>
-        </div>
-        <h3 style="margin-top: 30px;">Productos Populares</h3>
+            </div>
+
+        <h3 style="margin-top: 30px;">Catálogo</h3>
+        <div id="loading">Cargando productos desde Google Sheets...</div>
         <div class="products-grid" id="products-grid"></div>
     </div>
 
@@ -142,21 +101,18 @@
         <div class="product-detail-content">
             <span class="close-modal" onclick="closeProductModal()">&times;</span>
             <div class="detail-image-col">
-                <div class="main-image-view">
-                    <img id="detail-main-img" src="" alt="Producto">
-                </div>
-                <div class="thumbnails-row" id="detail-thumbnails">
-                    </div>
+                <div class="main-image-view"><img id="detail-main-img" src=""></div>
+                <div class="thumbnails-row" id="detail-thumbnails"></div>
             </div>
             <div class="detail-info-col">
-                <div class="detail-cat" id="detail-cat">Categoría</div>
-                <h2 class="detail-title" id="detail-title">Nombre Producto</h2>
-                <div class="detail-price" id="detail-price">$0.00</div>
-                <p class="detail-desc" id="detail-desc">Descripción...</p>
-                <div class="detail-options" id="detail-options-container"></div>
+                <div id="detail-cat" style="color:gray; font-size:0.9rem;"></div>
+                <h2 id="detail-title" class="detail-title"></h2>
+                <div id="detail-price" class="detail-price"></div>
+                <p id="detail-desc" style="color:#555; line-height:1.6;"></p>
+                <div id="detail-options-container" style="margin-bottom:20px;"></div>
                 <div class="detail-actions">
-                    <button class="btn-add" onclick="addToCartFromDetail()">Agregar al Carrito</button>
-                    <button class="btn-buy" onclick="buyNowFromDetail()">Comprar Ahora</button>
+                    <button class="btn-add" onclick="addToCartFromDetail()">Agregar</button>
+                    <button class="btn-buy" onclick="buyNowFromDetail()">Comprar</button>
                 </div>
             </div>
         </div>
@@ -168,176 +124,94 @@
                 <h2>Tu Pedido</h2>
                 <span style="cursor:pointer; font-size:1.5rem;" onclick="closeCart()">&times;</span>
             </div>
-            <div class="cart-items-container" id="cart-items">
-                <p>Tu carrito está vacío.</p>
-            </div>
+            <div class="cart-items-container" id="cart-items"></div>
             <div style="border-top: 1px solid #eee; padding-top: 20px;">
-                <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.2rem; margin-bottom:15px;">
-                    <span>Total:</span>
-                    <span id="cart-total">$0.00</span>
-                </div>
-                <button class="btn-buy" style="width:100%" onclick="checkout()">Finalizar Pedido por WhatsApp</button>
+                <div style="font-weight:bold; font-size:1.2rem; margin-bottom:15px; text-align: right;" id="cart-total">Total: $0.00</div>
+                <button class="btn-buy" style="width:100%" onclick="checkout()">Pedir por WhatsApp</button>
             </div>
         </div>
     </div>
 
-    <footer>
-        <p>© 2024 Copa Cars Accesorios - Ecuador</p>
-    </footer>
+    <footer><p style="text-align:center; padding:20px; color:#666;">© 2024 Copa Cars Accesorios</p></footer>
 
     <script>
         const PHONE_NUMBER = "593980370222"; 
         
-        const SLIDES = [
-            { image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1200&q=80", text: "Estilo y Potencia" },
-            { image: "https://images.unsplash.com/photo-1562426503-12e6fd634081?auto=format&fit=crop&w=1200&q=80", text: "Iluminación LED Premium" }
-        ];
+        // ¡¡¡ PEGA AQUÍ TU ENLACE DE GOOGLE SHEETS (CSV) !!!
+        const SHEET_URL = "PON_AQUI_TU_LINK_DE_GOOGLE_SHEETS"; 
 
-        /* --- CONFIGURACIÓN DE PRODUCTOS (AHORA CON VARIAS FOTOS) --- 
-           NOTA: En lugar de "image", ahora usamos "images" (en plural y con corchetes [])
-           La primera foto de la lista será la portada.
-        */
-        const products = [
-            {
-                id: 1,
-                name: "Tubo de Escape Deportivo",
-                price: 10.00,
-                category: "Accesorios Exterior",
-                // AQUÍ AGREGAS LAS FOTOS SEPARADAS POR COMA
-                images: [
-                    "https://m.media-amazon.com/images/I/61b7b7v+LIL._AC_SL1000_.jpg", 
-                    "https://m.media-amazon.com/images/I/71wPj-s+LBL._AC_SL1500_.jpg",
-                    "logo.jpg"
-                ],
-                stock: true,
-                variants: ["Azul", "Rojo", "Gris"],
-                description: "Tubo de escape deportivo de acero inoxidable."
-            },
-            {
-                id: 2,
-                name: "Luces LED Neón",
-                price: 25.50,
-                category: "Luces led",
-                images: [
-                    "https://m.media-amazon.com/images/I/71wPj-s+LBL._AC_SL1500_.jpg"
-                ],
-                stock: true,
-                variants: ["RGB Multiclor", "Azul Eléctrico"],
-                description: "Kit de iluminación ambiental para el interior."
-            },
-            {
-                id: 3,
-                name: "Forro Volante Deportivo",
-                price: 15.00,
-                category: "Accesorios interior",
-                images: [
-                    "https://m.media-amazon.com/images/I/71O0R9t0+dL._AC_SL1500_.jpg"
-                ],
-                stock: false,
-                variants: ["Negro Rojo", "Negro Total"],
-                description: "Protege tu volante con cuero sintético premium."
-            },
-            {
-                id: 4,
-                name: "Radio Pantalla 7 pulg",
-                price: 85.00,
-                category: "Radios",
-                images: [
-                    "https://m.media-amazon.com/images/I/61+2z6s2+uL._AC_SL1000_.jpg"
-                ],
-                stock: true,
-                variants: ["Estándar"],
-                description: "Radio Android con pantalla táctil HD."
-            },
-            {
-                id: 5,
-                name: "Polarizado Nano-Cerámica",
-                price: 60.00,
-                category: "Polarizado",
-                images: [
-                    "https://images.unsplash.com/photo-1621996659490-3275b4d0d951?auto=format&fit=crop&w=500&q=60"
-                ],
-                stock: true,
-                variants: ["5%", "20%", "35%"],
-                description: "Película de seguridad de alta tecnología."
-            },
-            
-    { id: 6,
-        name: "Tubo de Escape ",
-        price: 10,
-        category: "Accesorios Exterior",
-        images: [
-            "https://storeshi.com/cdn/shop/files/IMG-4809_500x.jpg?v=1696613342",
-            "https://storeshi.com/cdn/shop/products/image_50b04850-14fe-47d5-8779-0e017f47eab4_500x.jpg?v=1696613342",
-            "https://storeshi.com/cdn/shop/products/image_f1e618ea-6e96-49ac-bbc3-2f516c90dbc7_500x.jpg?v=1696613342"
-        ],
-        stock: true,
-        variants: [
-            "Rojo",
-            "Azul",
-            "Gris",
-            "Negro"
-        ],
-        description: "Optimiza el rendimiento y la estética de tu vehículo con este tubo de escape de alta durabilidad. Diseñado para ofrecer un acabado premium, es el accesorio ideal para destacar con elegancia y potencia en cada trayecto.",
-        
-    }
-
-        ];
-
-        /* ================= LÓGICA DEL SISTEMA ================= */
+        let products = [];
         let cart = [];
-        let currentProduct = null; 
+        let currentProduct = null;
 
-        // Carrusel
-        const track = document.getElementById('carousel-track');
-        SLIDES.forEach(slide => {
-            const div = document.createElement('div');
-            div.className = 'carousel-slide';
-            div.style.backgroundImage = `url('${slide.image}')`;
-            div.innerHTML = `<div class="carousel-text"><h2>${slide.text}</h2></div>`;
-            track.appendChild(div);
-        });
-        let slideIndex = 0;
-        setInterval(() => {
-            slideIndex = (slideIndex + 1) % SLIDES.length;
-            track.style.transform = `translateX(-${slideIndex * 100}%)`;
-        }, 4000);
+        // Cargar datos al iniciar
+        window.onload = function() {
+            if(SHEET_URL === "https://docs.google.com/spreadsheets/d/e/2PACX-1vR4XiOIAqib5wdMK5UU__AInDUCYkfTa8ztC--R49-Ad1l-WE_9mWdVP9n4363erXq3Qskg2RoYNxF-/pub?output=csv") {
+                document.getElementById('loading').innerText = "¡Error! Falta configurar el enlace de Google Sheets en el código.";
+                return;
+            }
 
-        // Filtros
-        const categories = [...new Set(products.map(p => p.category))];
-        const filterContainer = document.getElementById('category-filters');
-        categories.forEach(cat => {
-            const btn = document.createElement('button');
-            btn.className = 'filter-btn';
-            btn.innerText = cat;
-            btn.onclick = () => renderProducts(cat);
-            filterContainer.appendChild(btn);
-        });
+            Papa.parse(SHEET_URL, {
+                download: true,
+                header: true,
+                complete: function(results) {
+                    console.log("Datos cargados:", results.data);
+                    
+                    // Procesar datos del Excel al formato de la web
+                    products = results.data
+                        .filter(row => row.name && row.price) // Ignorar filas vacías
+                        .map(row => ({
+                            id: row.id,
+                            name: row.name,
+                            price: parseFloat(row.price),
+                            category: row.category,
+                            // Convertir texto "foto1.jpg,foto2.jpg" en lista ["foto1.jpg", "foto2.jpg"]
+                            images: row.images ? row.images.split(',').map(s => s.trim()) : ['logo.jpg'],
+                            stock: row.stock && row.stock.toLowerCase() === 'true',
+                            variants: row.variants ? row.variants.split(',').map(s => s.trim()) : [],
+                            description: row.description
+                        }));
 
-        // Renderizar Grid
-        function renderProducts(filter = 'all') {
+                    document.getElementById('loading').style.display = 'none';
+                    initApp();
+                },
+                error: function(err) {
+                    document.getElementById('loading').innerText = "Error al cargar productos.";
+                    console.error(err);
+                }
+            });
+        };
+
+        function initApp() {
+            // Filtros
+            const categories = [...new Set(products.map(p => p.category))];
+            const filterContainer = document.getElementById('category-filters');
+            filterContainer.innerHTML = '<button class="filter-btn active" onclick="renderProducts(\'all\')">Todas</button>';
+            categories.forEach(cat => {
+                filterContainer.innerHTML += `<button class="filter-btn" onclick="renderProducts('${cat}')">${cat}</button>`;
+            });
+            renderProducts('all');
+        }
+
+        function renderProducts(filter) {
             const grid = document.getElementById('products-grid');
             grid.innerHTML = '';
             
+            // Actualizar botones
             document.querySelectorAll('.filter-btn').forEach(b => {
-                if(filter === 'all' && b.innerText === 'Todas') b.classList.add('active');
-                else if(b.innerText === filter) b.classList.add('active');
+                if(b.innerText === filter || (filter === 'all' && b.innerText === 'Todas')) b.classList.add('active');
                 else b.classList.remove('active');
             });
 
             const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
 
             filtered.forEach(p => {
+                const coverImage = p.images[0].startsWith('http') ? p.images[0] : p.images[0];
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 card.onclick = () => openProductModal(p.id);
-                // Usamos la primera imagen (images[0]) como portada
-                const coverImage = p.images && p.images.length > 0 ? p.images[0] : 'logo.jpg';
-                
                 card.innerHTML = `
-                    <div class="product-image-container">
-                        <img src="${coverImage}" alt="${p.name}" class="product-image">
-                    </div>
+                    <div class="product-image-container"><img src="${coverImage}" class="product-image"></div>
                     <div class="product-info">
                         <div class="product-cat">${p.category}</div>
                         <h4 class="product-title">${p.name}</h4>
@@ -349,66 +223,43 @@
             });
         }
 
-        // --- FUNCIONES DEL MODAL CON GALERÍA ---
         function openProductModal(id) {
-            currentProduct = products.find(p => p.id === id);
-            
-            // 1. Mostrar la primera foto en grande
+            currentProduct = products.find(p => p.id == id); // Usar == por si id es texto en excel
             const mainImg = document.getElementById('detail-main-img');
-            const mainImageSrc = currentProduct.images && currentProduct.images.length > 0 ? currentProduct.images[0] : 'logo.jpg';
-            mainImg.src = mainImageSrc;
+            mainImg.src = currentProduct.images[0];
             
-            // 2. Generar las miniaturas
+            // Miniaturas
             const thumbContainer = document.getElementById('detail-thumbnails');
-            thumbContainer.innerHTML = ''; // Limpiar anteriores
-            
-            if(currentProduct.images && currentProduct.images.length > 1) {
-                currentProduct.images.forEach(imgSrc => {
-                    const thumb = document.createElement('img');
-                    thumb.src = imgSrc;
-                    thumb.className = 'thumb-img';
-                    thumb.onclick = function() {
-                        // Cambiar foto grande al hacer clic
-                        mainImg.src = imgSrc;
-                        // Estilo activo
-                        document.querySelectorAll('.thumb-img').forEach(t => t.classList.remove('active-thumb'));
-                        thumb.classList.add('active-thumb');
-                    };
-                    thumbContainer.appendChild(thumb);
+            thumbContainer.innerHTML = '';
+            if(currentProduct.images.length > 1) {
+                currentProduct.images.forEach(img => {
+                    const t = document.createElement('img');
+                    t.src = img; t.className = 'thumb-img';
+                    t.onclick = () => { mainImg.src = img; };
+                    thumbContainer.appendChild(t);
                 });
             }
 
-            // Datos de texto
             document.getElementById('detail-cat').innerText = currentProduct.category;
             document.getElementById('detail-title').innerText = currentProduct.name;
             document.getElementById('detail-price').innerText = `$${currentProduct.price.toFixed(2)}`;
-            document.getElementById('detail-desc').innerText = currentProduct.description || "Sin descripción disponible.";
+            document.getElementById('detail-desc').innerText = currentProduct.description || "";
 
             // Variantes
-            const optionsContainer = document.getElementById('detail-options-container');
-            if (currentProduct.variants && currentProduct.variants.length > 0) {
-                optionsContainer.innerHTML = `
-                    <label>Selecciona Opción:</label>
-                    <select id="modal-variant-select">
-                        ${currentProduct.variants.map(v => `<option value="${v}">${v}</option>`).join('')}
-                    </select>
-                `;
+            const optContainer = document.getElementById('detail-options-container');
+            if(currentProduct.variants.length > 0) {
+                optContainer.innerHTML = `<label>Opción:</label><select id="variant-select">${currentProduct.variants.map(v=>`<option>${v}</option>`).join('')}</select>`;
             } else {
-                optionsContainer.innerHTML = '';
+                optContainer.innerHTML = '';
             }
 
-            // Botones Stock
+            // Stock
             const btnAdd = document.querySelector('.btn-add');
             const btnBuy = document.querySelector('.btn-buy');
-            
             if(!currentProduct.stock) {
-                btnAdd.disabled = true;
-                btnAdd.innerText = "Agotado";
-                btnBuy.style.display = 'none';
+                btnAdd.disabled = true; btnAdd.innerText = "Agotado"; btnBuy.style.display = 'none';
             } else {
-                btnAdd.disabled = false;
-                btnAdd.innerText = "Agregar al Carrito";
-                btnBuy.style.display = 'block';
+                btnAdd.disabled = false; btnAdd.innerText = "Agregar"; btnBuy.style.display = 'block';
             }
 
             document.getElementById('product-modal').style.display = 'flex';
@@ -416,93 +267,68 @@
 
         function closeProductModal() { document.getElementById('product-modal').style.display = 'none'; }
 
-        // --- CARRITO Y COMPRA ---
         function addToCartFromDetail() {
             if(!currentProduct) return;
-            const variantSelect = document.getElementById('modal-variant-select');
-            const selectedVariant = variantSelect ? variantSelect.value : 'Estándar';
-            const cartItemId = `${currentProduct.id}-${selectedVariant}`;
-            const existingItem = cart.find(item => item.cartId === cartItemId);
+            const sel = document.getElementById('variant-select');
+            const variant = sel ? sel.value : 'Estándar';
+            const cartId = `${currentProduct.id}-${variant}`;
+            const exists = cart.find(i => i.cartId === cartId);
             
-            // Usamos la primera imagen para mostrar en el carrito
-            const itemImage = currentProduct.images && currentProduct.images.length > 0 ? currentProduct.images[0] : 'logo.jpg';
-
-            if (existingItem) {
-                existingItem.quantity++;
-            } else {
-                cart.push({
-                    ...currentProduct,
-                    image: itemImage, // Guardamos la imagen principal para el carrito
-                    cartId: cartItemId,
-                    selectedVariant: selectedVariant,
-                    quantity: 1
-                });
-            }
+            if(exists) exists.quantity++;
+            else cart.push({...currentProduct, cartId: cartId, selectedVariant: variant, quantity: 1});
+            
             updateCartUI();
             closeProductModal();
             openCart();
         }
 
         function buyNowFromDetail() { addToCartFromDetail(); }
-
-        function removeFromCart(cartId) {
-            cart = cart.filter(item => item.cartId !== cartId);
-            updateCartUI();
-        }
+        
+        function removeFromCart(id) { cart = cart.filter(i => i.cartId !== id); updateCartUI(); }
 
         function updateCartUI() {
-            document.getElementById('cart-count').innerText = cart.reduce((acc, item) => acc + item.quantity, 0);
-            const itemsContainer = document.getElementById('cart-items');
-            itemsContainer.innerHTML = '';
+            document.getElementById('cart-count').innerText = cart.reduce((a,b)=>a+b.quantity,0);
+            const container = document.getElementById('cart-items');
+            container.innerHTML = '';
             let total = 0;
-            
-            if (cart.length === 0) {
-                itemsContainer.innerHTML = '<p style="text-align:center; color:#888;">Tu carrito está vacío.</p>';
-            } else {
+            if(cart.length === 0) container.innerHTML = '<p>Carrito vacío.</p>';
+            else {
                 cart.forEach(item => {
-                    const itemTotal = item.price * item.quantity;
-                    total += itemTotal;
-                    itemsContainer.innerHTML += `
+                    total += item.price * item.quantity;
+                    container.innerHTML += `
                         <div class="cart-item">
-                            <img src="${item.image}" alt="img">
-                            <div style="flex-grow:1;">
-                                <div style="font-weight:bold; font-size:0.9rem;">${item.name}</div>
-                                <div style="font-size:0.8rem; color:#666;">${item.selectedVariant}</div>
-                                <div style="font-size:0.9rem;">$${item.price.toFixed(2)} x ${item.quantity}</div>
+                            <img src="${item.images[0]}" style="width:50px;height:50px;object-fit:cover;">
+                            <div style="flex:1; margin-left:10px;">
+                                <div><b>${item.name}</b></div>
+                                <div style="font-size:0.8rem;">${item.selectedVariant}</div>
+                                <div>$${item.price} x ${item.quantity}</div>
                             </div>
-                            <div style="display:flex; flex-direction:column; justify-content:space-between; align-items:flex-end;">
-                                <div style="font-weight:bold;">$${itemTotal.toFixed(2)}</div>
-                                <small style="color:red; cursor:pointer;" onclick="removeFromCart('${item.cartId}')">Eliminar</small>
-                            </div>
-                        </div>
-                    `;
+                            <span style="color:red;cursor:pointer;" onclick="removeFromCart('${item.cartId}')">✕</span>
+                        </div>`;
                 });
             }
-            document.getElementById('cart-total').innerText = `$${total.toFixed(2)}`;
+            document.getElementById('cart-total').innerText = `Total: $${total.toFixed(2)}`;
         }
 
         function openCart() { document.getElementById('cart-modal').style.display = 'flex'; }
         function closeCart() { document.getElementById('cart-modal').style.display = 'none'; }
-
+        
         function checkout() {
-            if (cart.length === 0) return;
-            let message = "Hola Copa Cars, deseo pedir:%0A%0A";
+            if(cart.length===0) return;
+            let msg = "Hola Copa Cars, mi pedido:%0A%0A";
             let total = 0;
-            cart.forEach(item => {
-                total += item.price * item.quantity;
-                message += `▪️ ${item.quantity}x ${item.name} (${item.selectedVariant}) - $${(item.price * item.quantity).toFixed(2)}%0A`;
+            cart.forEach(i => {
+                total += i.price * i.quantity;
+                msg += `▪️ ${i.quantity}x ${i.name} (${i.selectedVariant}) - $${(i.price*i.quantity).toFixed(2)}%0A`;
             });
-            message += `%0A*TOTAL: $${total.toFixed(2)}*`;
-            message += "%0A%0A¿Me confirma disponibilidad?";
-            window.open(`https://wa.me/${PHONE_NUMBER}?text=${message}`, '_blank');
+            msg += `%0A*TOTAL: $${total.toFixed(2)}*`;
+            window.open(`https://wa.me/${PHONE_NUMBER}?text=${msg}`, '_blank');
         }
 
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('cart-modal')) closeCart();
-            if (event.target == document.getElementById('product-modal')) closeProductModal();
+        window.onclick = function(e) {
+            if(e.target == document.getElementById('cart-modal')) closeCart();
+            if(e.target == document.getElementById('product-modal')) closeProductModal();
         }
-
-        renderProducts();
     </script>
 </body>
 </html>
