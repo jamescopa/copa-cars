@@ -22,12 +22,10 @@
         .cart-icon { cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; font-weight: 600; }
         .cart-count { background: var(--primary); color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; justify-content: center; align-items: center; font-size: 0.75rem; }
 
-        /* ESTILOS DEL CARRUSEL MEJORADOS */
+        /* CARRUSEL */
         .carousel { position: relative; width: 100%; height: 350px; overflow: hidden; background: #eee; margin-bottom: 20px; }
         .carousel-track { display: flex; transition: transform 0.5s ease-in-out; height: 100%; }
         .carousel-slide { min-width: 100%; height: 100%; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; position: relative; }
-        
-        /* Texto del carrusel (Opcional) */
         .carousel-text { position: relative; color: white; text-align: center; z-index: 2; background: rgba(0,0,0,0.4); padding: 10px 20px; border-radius: 8px; }
         .carousel-text h2 { font-size: 2rem; margin: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
 
@@ -64,13 +62,22 @@
         .close-modal { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #aaa; z-index: 10; background: white; border-radius: 50%; width: 30px; height: 30px; text-align: center; line-height: 30px; }
         .detail-title { font-size: 2rem; font-weight: 800; margin: 0 0 10px 0; }
         .detail-price { font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
+        
+        /* SELECTOR DE CANTIDAD */
+        .qty-selector { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .qty-btn { width: 35px; height: 35px; border: 1px solid #ddd; background: white; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
+        .qty-btn:hover { background: #eee; }
+        .qty-input { width: 50px; text-align: center; border: none; font-size: 1.2rem; font-weight: bold; background: transparent; }
+
         .detail-actions { display: flex; gap: 10px; margin-top: auto; }
         .btn-add, .btn-buy { flex: 1; padding: 15px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; }
         .btn-add { background: #f0f0f0; } .btn-buy { background: var(--primary); color: white; }
         
         .cart-modal-content { background: white; width: 100%; max-width: 400px; height: 100%; position: absolute; right: 0; padding: 20px; display: flex; flex-direction: column; }
         .cart-items-container { flex-grow: 1; overflow-y: auto; margin: 20px 0; }
-        .cart-item { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .cart-item { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px; align-items: center; }
+        /* Botones pequeños en carrito */
+        .cart-qty-btn { width: 25px; height: 25px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer; }
 
         @media (max-width: 768px) {
             .carousel { height: 200px; }
@@ -103,11 +110,9 @@
 
     <div class="container">
         <h3>Categorías</h3>
-        <div class="filters" id="category-filters">
-            </div>
-
+        <div class="filters" id="category-filters"></div>
         <h3 style="margin-top: 30px;">Catálogo</h3>
-        <div id="loading">Cargando productos desde Google Sheets...</div>
+        <div id="loading">Cargando productos, buscando las mejores ofertas...</div>
         <div class="products-grid" id="products-grid"></div>
     </div>
 
@@ -123,7 +128,16 @@
                 <h2 id="detail-title" class="detail-title"></h2>
                 <div id="detail-price" class="detail-price"></div>
                 <p id="detail-desc" style="color:#555; line-height:1.6;"></p>
-                <div id="detail-options-container" style="margin-bottom:20px;"></div>
+                
+                <div id="detail-options-container" style="margin-bottom:10px;"></div>
+
+                <div class="qty-selector">
+                    <span style="font-weight:600;">Cantidad:</span>
+                    <button class="qty-btn" onclick="updateModalQty(-1)">-</button>
+                    <input type="text" id="modal-qty" class="qty-input" value="1" readonly>
+                    <button class="qty-btn" onclick="updateModalQty(1)">+</button>
+                </div>
+
                 <div class="detail-actions">
                     <button class="btn-add" onclick="addToCartFromDetail()">Agregar</button>
                     <button class="btn-buy" onclick="buyNowFromDetail()">Comprar</button>
@@ -149,14 +163,9 @@
     <footer><p style="text-align:center; padding:20px; color:#666;">© 2026 Copa Cars Accesorios</p></footer>
 
     <script>
-        /* ================= CONFIGURACIÓN ================= */
         const PHONE_NUMBER = "593980370222"; 
-        
-        // TU GOOGLE SHEET
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR4XiOIAqib5wdMK5UU__AInDUCYkfTa8ztC--R49-Ad1l-WE_9mWdVP9n4363erXq3Qskg2RoYNxF-/pub?output=csv"; 
 
-        // CONFIGURACIÓN DEL CARRUSEL (Usando tus imágenes subidas)
-        // Dejo el texto vacío "" para que no salga "undefined"
         const SLIDES = [
             { image: "Oferta.png", text: "" },
             { image: "Oferta (2).png", text: "" },
@@ -164,15 +173,12 @@
             { image: "Oferta (4).png", text: "" }
         ];
 
-        /* ================= LÓGICA ================= */
         let products = [];
         let cart = [];
         let currentProduct = null;
 
-        // Cargar Carrusel y Productos al iniciar
         window.onload = function() {
             initCarousel(); 
-            
             Papa.parse(SHEET_URL, {
                 download: true,
                 header: true,
@@ -189,29 +195,20 @@
                             variants: row.variants ? row.variants.split(',').map(s => s.trim()) : [],
                             description: row.description
                         }));
-
                     document.getElementById('loading').style.display = 'none';
                     initApp();
                 },
-                error: function(err) {
-                    document.getElementById('loading').innerText = "Error al cargar productos.";
-                }
+                error: function(err) { document.getElementById('loading').innerText = "Error al cargar productos."; }
             });
         };
 
-        // Función del Carrusel Actualizada
         function initCarousel() {
             const track = document.getElementById('carousel-track');
             SLIDES.forEach(slide => {
                 const div = document.createElement('div');
                 div.className = 'carousel-slide';
                 div.style.backgroundImage = `url('${slide.image}')`;
-                
-                // Solo agrega texto si existe algo escrito, si no, lo deja limpio
-                if(slide.text && slide.text !== "") {
-                    div.innerHTML = `<div class="carousel-text"><h2>${slide.text}</h2></div>`;
-                }
-                
+                if(slide.text && slide.text !== "") div.innerHTML = `<div class="carousel-text"><h2>${slide.text}</h2></div>`;
                 track.appendChild(div);
             });
             let slideIndex = 0;
@@ -288,6 +285,9 @@
                 optContainer.innerHTML = '';
             }
 
+            // RESETEAR CANTIDAD A 1 CADA VEZ QUE SE ABRE
+            document.getElementById('modal-qty').value = 1;
+
             const btnAdd = document.querySelector('.btn-add');
             const btnBuy = document.querySelector('.btn-buy');
             if(!currentProduct.stock) {
@@ -301,15 +301,27 @@
 
         function closeProductModal() { document.getElementById('product-modal').style.display = 'none'; }
 
+        // --- FUNCIONES DE CANTIDAD ---
+        function updateModalQty(change) {
+            const input = document.getElementById('modal-qty');
+            let val = parseInt(input.value);
+            val += change;
+            if(val < 1) val = 1;
+            input.value = val;
+        }
+
         function addToCartFromDetail() {
             if(!currentProduct) return;
             const sel = document.getElementById('variant-select');
             const variant = sel ? sel.value : 'Estándar';
+            // LEER CANTIDAD SELECCIONADA
+            const qty = parseInt(document.getElementById('modal-qty').value);
+            
             const cartId = `${currentProduct.id}-${variant}`;
             const exists = cart.find(i => i.cartId === cartId);
             
-            if(exists) exists.quantity++;
-            else cart.push({...currentProduct, cartId: cartId, selectedVariant: variant, quantity: 1});
+            if(exists) exists.quantity += qty; // Sumar la cantidad elegida
+            else cart.push({...currentProduct, cartId: cartId, selectedVariant: variant, quantity: qty});
             
             updateCartUI();
             closeProductModal();
@@ -319,6 +331,16 @@
         function buyNowFromDetail() { addToCartFromDetail(); }
         
         function removeFromCart(id) { cart = cart.filter(i => i.cartId !== id); updateCartUI(); }
+
+        // ACTUALIZAR CANTIDAD EN EL CARRITO
+        function updateCartItemQty(cartId, change) {
+            const item = cart.find(i => i.cartId === cartId);
+            if(item) {
+                item.quantity += change;
+                if(item.quantity < 1) item.quantity = 1;
+                updateCartUI();
+            }
+        }
 
         function updateCartUI() {
             document.getElementById('cart-count').innerText = cart.reduce((a,b)=>a+b.quantity,0);
@@ -335,9 +357,16 @@
                             <div style="flex:1; margin-left:10px;">
                                 <div><b>${item.name}</b></div>
                                 <div style="font-size:0.8rem;">${item.selectedVariant}</div>
-                                <div>$${item.price} x ${item.quantity}</div>
+                                <div style="display:flex; align-items:center; gap:5px; margin-top:5px;">
+                                    <button class="cart-qty-btn" onclick="updateCartItemQty('${item.cartId}', -1)">-</button>
+                                    <span>${item.quantity}</span>
+                                    <button class="cart-qty-btn" onclick="updateCartItemQty('${item.cartId}', 1)">+</button>
+                                </div>
                             </div>
-                            <span style="color:red;cursor:pointer;" onclick="removeFromCart('${item.cartId}')">✕</span>
+                            <div style="text-align:right;">
+                                <div>$${(item.price * item.quantity).toFixed(2)}</div>
+                                <small style="color:red;cursor:pointer;" onclick="removeFromCart('${item.cartId}')">Eliminar</small>
+                            </div>
                         </div>`;
                 });
             }
